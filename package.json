@@ -1,0 +1,20 @@
+{
+  "name": "@Meindonsa/icon",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc && cp src/meindonsa-icon.css dist/ && cp symbol/svg/sprite.css.svg dist/",
+    "generate": "node generate-style.js",
+    "sprite": "svg-sprite 'icon/**/*.svg' --symbol -o dist/"
+  },
+  "devDependencies": {
+    "svg-sprite": "^2.0.4",
+    "typescript": "^5.5.3"
+  },
+  "type": "module",
+  "keywords": ["icons", "web-component", "svg"],
+  "author": "Meindonsa",
+  "license": "MIT"
+}
