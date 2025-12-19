@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "files": ["dist"],
   "scripts": {
-    "build": "tsc && cp src/meindonsa-icon.css dist/ && cp symbol/svg/sprite.css.svg dist/",
-    "generate": "node generate-style.js",
+    "build": "tsc && node build.js",
+    "generate": "node build.js",
     "sprite": "svg-sprite 'icon/**/*.svg' --symbol -o dist/"
   },
   "devDependencies": {
