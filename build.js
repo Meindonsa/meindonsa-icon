@@ -6,74 +6,121 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const encodeSVG = (svg) => {
+    return svg
+        .replace(/"/g, "'")
+        .replace(/%/g, '%25')
+        .replace(/#/g, '%23')
+        .replace(/{/g, '%7B')
+        .replace(/}/g, '%7D')
+        .replace(/</g, '%3C')
+        .replace(/>/g, '%3E')
+        .replace(/\s+/g, ' ');
+};
+
 const spriter = new SVGSpriter({
     dest: 'dist',
     mode: {
-        symbol: {
-            dest: '.',
-            sprite: 'space-icons.svg',
-            prefix: '.',
-            dimensions: '',
-            render: {
-                css: {
-                    dest: 'space-icons.css',
-                    template: path.resolve(__dirname, 'src/tmpl.css')
-                },
-                scss: {
-                    dest: 'space-icons.scss',
-                    template: path.resolve(__dirname, 'src/tmpl.scss')
-                }
-            }
-        }
+        symbol: { dest: '.', sprite: 'space-icons.svg' }
     },
     shape: {
-        id: {
-            generator: '%s'
-        },
-        transform: [
-            {
-                svgo: {
-                    plugins: [
-                        {
-                            name: 'preset-default',
-                            params: {
-                                overrides: {
-                                    removeViewBox: false,
-                                }
-                            }
-                        },
-                        { name: 'convertColors', params: { currentColor: true } },
-                        { name: 'removeAttrs', params: { attrs: '(style|class|data-name)' } }
-                    ]
-                }
+        id: { generator: '%s' },
+        transform: [{
+            svgo: {
+                plugins: [
+                    'preset-default',
+                    { name: 'removeViewBox', active: false },
+                    { name: 'convertColors', params: { currentColor: true } },
+                    { name: 'removeAttrs', params: { attrs: '(style|class|data-name)' } }
+                ]
             }
-        ]
+        }]
     }
 });
 
-const iconDir = path.resolve('icon');
-if (!fs.existsSync(iconDir)) {
-    fs.mkdirSync(iconDir);
-    console.log('Dossier /icon créé. Ajoutez vos SVG dedans.');
-    process.exit(0);
-}
-
+const iconDir = path.resolve(__dirname, 'icon');
 const files = fs.readdirSync(iconDir).filter(f => f.endsWith('.svg'));
 
+// Initialisation des contenus
+let cssContent = `.si {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    vertical-align: middle;
+}\n\n`;
+
+let scssIconsMap = '$si-icons: (\n';
+
 files.forEach(file => {
+    const name = file.replace('.svg', '');
     const filePath = path.join(iconDir, file);
-    spriter.add(filePath, null, fs.readFileSync(filePath, 'utf-8'));
+    const svgRaw = fs.readFileSync(filePath, 'utf-8');
+
+    spriter.add(filePath, null, svgRaw);
+
+    const encoded = encodeSVG(svgRaw);
+    const dataUri = `data:image/svg+xml,${encoded}`;
+
+    // Ajout au CSS
+    cssContent += `.si-${name} {
+    -webkit-mask-image: url("${dataUri}");
+    mask-image: url("${dataUri}");
+}\n\n`;
+
+    // Ajout à la Map SCSS
+    scssIconsMap += `    "${name}": "${dataUri}",\n`;
 });
 
-// Compilation
+scssIconsMap += ');';
+
+// Template SCSS final
+const scssContent = `// Classe de base
+.si {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    vertical-align: middle;
+}
+
+// Map des icônes (Data URIs incluses)
+${scssIconsMap}
+
+// Génération des classes
+@each $name, $url in $si-icons {
+    .si-#{$name} {
+        -webkit-mask-image: url($url);
+        mask-image: url($url);
+    }
+}
+`;
+
 spriter.compile((error, result) => {
     if (error) return console.error(error);
-    
-    for (const mode in result) {
-        for (const resource in result[mode]) {
-            fs.mkdirSync(path.dirname(result[mode][resource].path), { recursive: true });
-            fs.writeFileSync(result[mode][resource].path, result[mode][resource].contents);
-        }
-    }
-    console.log('✨ Fichiers générés dans /dist (space-icons.css & space-icons.svg)');
+
+    fs.mkdirSync(path.resolve(__dirname, 'dist'), { recursive: true });
+
+    // Écriture du sprite SVG (pour le Web Component)
+    fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.svg'), result.symbol.sprite.contents);
+
+    // Écriture du CSS (pour le CDN)
+    fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.css'), cssContent);
+
+    // Écriture du SCSS (pour les projets Sass)
+    fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.scss'), scssContent);
+
+    console.log('✨ Fichiers générés : SVG, CSS et SCSS sont prêts dans /dist !');
 });
