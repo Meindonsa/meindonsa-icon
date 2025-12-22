@@ -1,10 +1,22 @@
-type SiIconAttributes = {
+export type SiIconAttributes = {
     name: string;
     size?: string | number;
     color?: string;
     class?: string;
 };
-declare class SiIcon extends HTMLElement {
+declare global {
+    namespace VUE {
+        interface GlobalComponents {
+            'si-icon': SiIconAttributes;
+        }
+    }
+    namespace JSX {
+        interface IntrinsicElements {
+            'si-icon': SiIconAttributes;
+        }
+    }
+}
+export declare class SiIcon extends HTMLElement {
     static get observedAttributes(): string[];
     private _name;
     private _size;
@@ -18,4 +30,3 @@ declare class SiIcon extends HTMLElement {
     private _updateAttributes;
     render(): void;
 }
-export { SiIcon, SiIconAttributes };

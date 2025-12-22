@@ -1,5 +1,4 @@
-/// <reference path="./vue.d.ts" />
-class SiIcon extends HTMLElement {
+export class SiIcon extends HTMLElement {
     static get observedAttributes() {
         return ['name', 'size', 'color', 'class'];
     }
@@ -82,4 +81,3 @@ class SiIcon extends HTMLElement {
 if (typeof window !== 'undefined' && !customElements.get('si-icon')) {
     customElements.define('si-icon', SiIcon);
 }
-export { SiIcon };

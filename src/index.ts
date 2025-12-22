@@ -1,13 +1,24 @@
-/// <reference path="./vue.d.ts" />
-
-type SiIconAttributes = {
+export type SiIconAttributes = {
     name: string;
     size?: string | number;
     color?: string;
     class?: string;
 };
 
-class SiIcon extends HTMLElement {
+declare global {
+    namespace VUE {
+        interface GlobalComponents {
+            'si-icon': SiIconAttributes;
+        }
+    }
+    namespace JSX {
+        interface IntrinsicElements {
+            'si-icon': SiIconAttributes;
+        }
+    }
+}
+
+export class SiIcon extends HTMLElement {
     static get observedAttributes(): string[] {
         return ['name', 'size', 'color', 'class'];
     }
@@ -91,5 +102,3 @@ class SiIcon extends HTMLElement {
 if (typeof window !== 'undefined' && !customElements.get('si-icon')) {
     customElements.define('si-icon', SiIcon);
 }
-
-export { SiIcon, SiIconAttributes };
