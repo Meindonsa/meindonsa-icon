@@ -2,13 +2,13 @@ class SiIcon extends HTMLElement {
     static get observedAttributes() {
         return ['name', 'size', 'color', 'class'];
     }
+    _name = '';
+    _size = '24';
+    _color = 'currentColor';
+    _class = '';
+    _spritePath = '';
     constructor() {
         super();
-        this._name = '';
-        this._size = '24';
-        this._color = 'currentColor';
-        this._class = '';
-        this._spritePath = '';
         this.attachShadow({ mode: 'open' });
         this._determineSpritePath();
     }
