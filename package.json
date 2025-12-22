@@ -1,15 +1,11 @@
 {
   "name": "@Meindonsa/space-icons",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Web Component icon library for space-icons",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*"
-  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
     "build": "tsc && node build.js",
@@ -26,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meindonsa/meindonsa-icon.git"
+    "url": "git+https://github.com/Meindonsa/space-icon.git"
   },
   "keywords": ["icons", "web-component", "svg"],
   "author": "Meindonsa",
