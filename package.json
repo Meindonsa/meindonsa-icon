@@ -1,11 +1,15 @@
 {
   "name": "@Meindonsa/space-icons",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Web Component icon library for space-icons",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*"
+  },
   "files": ["dist"],
   "scripts": {
     "build": "tsc && node build.js",
