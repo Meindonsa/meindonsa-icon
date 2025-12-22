@@ -61,7 +61,8 @@ class SiIcon extends HTMLElement {
     render(): void {
         if (!this._name) return;
 
-        const sizeValue = typeof this._size === 'number' ? `${this._size}px` : this._size;
+        const isNumeric = !isNaN(Number(this._size)) && /^\d+$/.test(String(this._size));
+        const sizeValue = isNumeric ? `${this._size}px` : this._size;
 
         this.shadowRoot!.innerHTML = `
           <style>
@@ -73,9 +74,7 @@ class SiIcon extends HTMLElement {
             svg {
               width: ${sizeValue};
               height: ${sizeValue};
-              /* On injecte la couleur ici */
               color: ${this._color};
-              /* On force fill et stroke à hériter de la couleur courante */
               fill: currentColor;
               stroke: currentColor;
             }

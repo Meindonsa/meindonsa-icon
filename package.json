@@ -1,19 +1,29 @@
 {
   "name": "@Meindonsa/icon",
   "version": "0.0.1",
-  "description": "",
+  "description": "Web Component icon library for space-icons",
+  "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
     "build": "tsc && node build.js",
     "generate": "node build.js",
-    "sprite": "svg-sprite 'icon/**/*.svg' --symbol -o dist/"
+    "sprite": "svg-sprite 'icon/**/*.svg' --symbol -o dist/",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "svg-sprite": "^2.0.4",
     "typescript": "^5.5.3"
   },
-  "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meindonsa/meindonsa-icon.git"
+  },
   "keywords": ["icons", "web-component", "svg"],
   "author": "Meindonsa",
   "license": "MIT"
