@@ -1,6 +1,6 @@
 {
   "name": "@meindonsa/space-icons",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Web Component icon library for space-icons",
   "type": "module",
   "main": "dist/index.js",
