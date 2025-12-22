@@ -68,13 +68,11 @@ files.forEach(file => {
     const encoded = encodeSVG(svgRaw);
     const dataUri = `data:image/svg+xml,${encoded}`;
 
-    // Ajout au CSS
     cssContent += `.si-${name} {
     -webkit-mask-image: url("${dataUri}");
     mask-image: url("${dataUri}");
 }\n\n`;
 
-    // Ajout à la Map SCSS
     scssIconsMap += `    "${name}": "${dataUri}",\n`;
 });
 
@@ -96,10 +94,8 @@ const scssContent = `// Classe de base
     vertical-align: middle;
 }
 
-// Map des icônes (Data URIs incluses)
 ${scssIconsMap}
 
-// Génération des classes
 @each $name, $url in $si-icons {
     .si-#{$name} {
         -webkit-mask-image: url($url);
@@ -113,13 +109,10 @@ spriter.compile((error, result) => {
 
     fs.mkdirSync(path.resolve(__dirname, 'dist'), { recursive: true });
 
-    // Écriture du sprite SVG (pour le Web Component)
     fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.svg'), result.symbol.sprite.contents);
 
-    // Écriture du CSS (pour le CDN)
     fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.css'), cssContent);
 
-    // Écriture du SCSS (pour les projets Sass)
     fs.writeFileSync(path.resolve(__dirname, 'dist/space-icons.scss'), scssContent);
 
     console.log('✨ Fichiers générés : SVG, CSS et SCSS sont prêts dans /dist !');
