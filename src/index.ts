@@ -1,3 +1,5 @@
+/// <reference path="./vue.d.ts" />
+
 type SiIconAttributes = {
     name: string;
     size?: string | number;

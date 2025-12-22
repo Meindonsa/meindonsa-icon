@@ -1,3 +1,4 @@
+/// <reference path="./vue.d.ts" />
 class SiIcon extends HTMLElement {
     static get observedAttributes() {
         return ['name', 'size', 'color', 'class'];

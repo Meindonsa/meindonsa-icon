@@ -24,6 +24,35 @@ npm install @meindonsa/space-icon
 
 ## Usage
 
+### Vue
+Install utility for vite
+
+```sh
+ npm install -D vite-plugin-static-copy
+```
+then, add this configuration to your vite.config.ts
+``` copy
+plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('si-')
+        }
+      }
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          // On prend le sprite dans la lib
+          src: 'node_modules/@meindonsa/space-icons/dist/space-icons.svg',
+          // On le met à la racine du build (donc accessible via /space-icons.svg)
+          dest: './'
+        }
+      ]
+    })
+  ]
+```
+
 ### 🛠 Integration in HTML
 Use the custom <si-icon> tag throughout your application:
 
